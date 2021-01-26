@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SFSchema, SFUISchema } from '@delon/form';
 import { _HttpClient } from '@delon/theme';
+import { Order } from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 
@@ -10,29 +11,40 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 })
 export class OrderListEditComponent implements OnInit {
   record: any = {};
-  i: any;
+  i: Order;
   schema: SFSchema = {
     properties: {
-      no: { type: 'string', title: '编号' },
-      owner: { type: 'string', title: '姓名', maxLength: 15 },
-      callNo: { type: 'number', title: '调用次数' },
-      href: { type: 'string', title: '链接', format: 'uri' },
-      description: { type: 'string', title: '描述', maxLength: 140 },
+      id: { type: 'string', title: '编号' },
+      clientName: { type: 'string', title: '客户名称', maxLength: 15 },
+      phone: { type: 'string', title: '联系电话' },
+      email: { type: 'string', title: '邮箱' },
+      address: { type: 'string', title: '地址', maxLength: 140 },
+      remark: { type: 'string', title: '描述', maxLength: 140 },
     },
-    required: ['owner', 'callNo', 'href', 'description'],
+    required: ['clientName', 'phone'],
   };
   ui: SFUISchema = {
     '*': {
       spanLabelFixed: 100,
       grid: { span: 12 },
     },
-    $no: {
+    $id: {
       widget: 'text',
     },
-    $href: {
+    $clientName: {
       widget: 'string',
     },
-    $description: {
+    $phone: {
+      widget: 'string',
+    },
+    $email: {
+      widget: 'string',
+    },
+    $address: {
+      widget: 'textarea',
+      grid: { span: 24 },
+    },
+    $remark: {
       widget: 'textarea',
       grid: { span: 24 },
     },
@@ -42,18 +54,21 @@ export class OrderListEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.record.id > 0) {
-      this.http.get(`/user/${this.record.id}`).subscribe((res) => (this.i = res));
+      this.http.get(`order/getById?id=${this.record.id}`).subscribe((res) => (this.i = res.data));
     }
   }
 
-  save(value: any) {
-    this.http.post(`/user/${this.record.id}`, value).subscribe((res) => {
+  save(value: any): void {
+    if (this.record.id === undefined) {
+      this.record.id = 0;
+    }
+    this.http.post(`order/${this.record.id}`, value).subscribe((res) => {
       this.msgSrv.success('保存成功');
       this.modal.close(true);
     });
   }
 
-  close() {
+  close(): void {
     this.modal.destroy();
   }
 }

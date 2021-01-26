@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { _HttpClient } from '@delon/theme';
+import { Order } from '@shared';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 
@@ -9,15 +11,15 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 })
 export class OrderListViewComponent implements OnInit {
   record: any = {};
-  i: any;
+  i: Order;
 
-  constructor(private modal: NzModalRef, public msgSrv: NzMessageService, public http: _HttpClient) {}
+  constructor(private modal: NzModalRef, public msgSrv: NzMessageService, public http: _HttpClient, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.http.get(`/user/${this.record.id}`).subscribe((res) => (this.i = res));
+    this.http.get(`order/getById?id=${this.record.id}`).subscribe((res) => (this.i = res.data));
   }
 
-  close() {
+  close(): void {
     this.modal.destroy();
   }
 }
