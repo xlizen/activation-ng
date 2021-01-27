@@ -54,13 +54,21 @@ export class OrderListComponent implements OnInit {
           type: 'static',
           modal: { component: OrderListViewComponent },
         },
-        { text: '编辑', type: 'modal', modal: { component: OrderListEditComponent }, click: 'reload' },
+        {
+          text: '编辑',
+          type: 'modal',
+          modal: { component: OrderListEditComponent },
+          click: () => {
+            this.load(this.q);
+            return null;
+          },
+        },
       ],
     },
   ];
 
   add(): any {
-    this.modal.createStatic(OrderListEditComponent, { i: { id: 0 } }).subscribe(() => this.st.reload());
+    this.modal.createStatic(OrderListEditComponent, { i: { id: null } }).subscribe(() => this.load(this.q));
   }
 
   ngOnInit(): void {

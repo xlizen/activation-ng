@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SFSchema, SFUISchema } from '@delon/form';
 import { _HttpClient } from '@delon/theme';
 import { Order } from '@shared';
@@ -70,5 +70,13 @@ export class OrderListEditComponent implements OnInit {
 
   close(): void {
     this.modal.destroy();
+  }
+
+  title(): string {
+    if (this.record.id > 0) {
+      return `编辑 ${this.record.id} 信息`;
+    } else {
+      return `新增订单`;
+    }
   }
 }
