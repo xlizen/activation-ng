@@ -71,14 +71,14 @@ export class DefaultInterceptor implements HttpInterceptor {
    */
   private refreshTokenRequest(): Observable<any> {
     const model = this.tokenSrv.get();
-    return this.http.post(`/api/auth/refresh`, null, null, { headers: { refresh_token: model?.refresh_token || '' } });
+    return this.http.post(`auth/refresh`, null, null, { headers: { refresh_token: model?.refresh_token || '' } });
   }
 
   // #region 刷新Token方式一：使用 401 重新刷新 Token
 
   private tryRefreshToken(ev: HttpResponseBase, req: HttpRequest<any>, next: HttpHandler): Observable<any> {
     // 1、若请求为刷新Token请求，表示来自刷新Token可以直接跳转登录页
-    if ([`/api/auth/refresh`].some((url) => req.url.includes(url))) {
+    if ([`auth/refresh`].some((url) => req.url.includes(url))) {
       this.toLogin();
       return throwError(ev);
     }
@@ -122,7 +122,7 @@ export class DefaultInterceptor implements HttpInterceptor {
     const token = this.tokenSrv.get()?.token;
     return req.clone({
       setHeaders: {
-        token: `Bearer ${token}`,
+        token: `${token}`,
       },
     });
   }
@@ -132,6 +132,7 @@ export class DefaultInterceptor implements HttpInterceptor {
   // #region 刷新Token方式二：使用 `@delon/auth` 的 `refresh` 接口
 
   private buildAuthRefresh(): void {
+    console.log("refresh token");
     this.tokenSrv.refresh
       .pipe(
         filter(() => !this.refreshToking),
@@ -142,10 +143,9 @@ export class DefaultInterceptor implements HttpInterceptor {
       )
       .subscribe(
         (res) => {
-          // TODO: Mock expired value
-          res.expired = +new Date() + 1000 * 60 * 5;
+          res.data.expired = +new Date() + 1000 * 60 * 5;
           this.refreshToking = false;
-          this.tokenSrv.set(res);
+          this.tokenSrv.set(res.data);
         },
         () => this.toLogin(),
       );
