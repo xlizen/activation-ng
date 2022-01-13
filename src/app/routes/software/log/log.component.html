@@ -1,0 +1,30 @@
+<page-header> </page-header>
+<nz-card>
+  <form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()" class="search__form">
+    <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item>
+          <nz-form-label nzFor="clientName">客户名称</nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="q.name" name="clientName" placeholder="请输入" id="clientName" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="16" nzSm="24">
+        <nz-form-item>
+          <nz-form-label nzFor="createTime">激活日期</nz-form-label>
+          <nz-form-control>
+            <nz-range-picker id="createTime" [(ngModel)]="q.createTimeRange" [nzFormat]="dateFormat" name="createTime"></nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzMd="8" nzSm="24">
+        <nz-form-item>
+          <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading">查询</button>
+          <button nz-button type="reset" (click)="reset()" class="mx-sm">重置</button>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <st #st [data]="data" [columns]="columns" [page]="pages" [pi]="q.page" [ps]="q.limit" [total]="q.total" (change)="change($event)"></st>
+</nz-card>

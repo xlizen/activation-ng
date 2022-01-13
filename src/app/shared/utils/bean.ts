@@ -24,3 +24,23 @@ export interface Order extends Bean {
   maxUseTime?: string;
   minUseTime?: string;
 }
+
+export interface Software extends Bean {
+  id?: string;
+  sn?: string;
+  name: string;
+  phone?: string;
+  email?: string;
+  companyName?: string;
+
+  ip?: string;
+  mac?: string;
+  softName?: string;
+  version?: string;
+
+  createTime?: string;
+
+  createTimeRange?: Date[];
+  maxCreateTime?: string;
+  minCreateTime?: string;
+}
